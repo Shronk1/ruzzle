@@ -1,22 +1,16 @@
-import { Outlet, Link } from "react-router-dom";
+import { Outlet } from "react-router-dom";
+import NavItem from "../components/NavItem";
 
 export default function Layout() {
   return(
     <>
-      <nav>
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/settings">Settings</Link>
-          </li>
-          <li>
-            <Link to="/authors">Authors</Link>
-          </li>
+      <nav className="block ">
+        <ul className="flex gap-6 justify-center">
+          <NavItem to="/">Home</NavItem>
+          <NavItem to="/settings">Settings</NavItem>
+          <NavItem to="/authors">Authors</NavItem>
         </ul>
       </nav>
-
       <Outlet />
     </>
   )
