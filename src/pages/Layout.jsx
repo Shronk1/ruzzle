@@ -3,8 +3,8 @@ import NavItem from "../components/NavItem";
 
 export default function Layout() {
   return(
-    <>
-      <nav className="block ">
+    <div className="h-screen flex flex-col">
+      <nav className="block">
         <ul className="flex gap-6 justify-center">
           <NavItem to="/">Home</NavItem>
           <NavItem to="/settings">Settings</NavItem>
@@ -12,6 +12,6 @@ export default function Layout() {
         </ul>
       </nav>
       <Outlet />
-    </>
+    </div>
   )
 }
