@@ -1,12 +1,12 @@
-export async function splitImageIntoTiles(imagePath, numRows, numCols) {
+export async function splitImageIntoTiles(imagePath, numCols, numRows) {
     return new Promise((resolve, reject) => {
         const image = new Image();
         image.onload = async () => {
             const widthOfOnePiece = image.width / numCols;
             const heightOfOnePiece = image.height / numRows;
             const imagePieces = [];
-            for (let y = 0; y < numRows; ++y) {
-                for (let x = 0; x < numCols; ++x) {
+            for (let x = 0; x < numCols; ++x) {
+                    for (let y = 0; y < numRows; ++y) {
                     const canvas = document.createElement('canvas');
                     canvas.width = widthOfOnePiece;
                     canvas.height = heightOfOnePiece;
@@ -31,6 +31,24 @@ export async function splitImageIntoTiles(imagePath, numRows, numCols) {
         image.src = imagePath;
     });
 }
+
+export async function scaleImage(imagePath, targetWidth) {
+    return new Promise((resolve, reject) => {
+        const image = new Image();
+        image.onload = async () => {
+            const targetHeight = targetWidth*image.height/image.width;
+            const canvas = document.createElement('canvas');
+            const ctx = canvas.getContext('2d');
+            canvas.width = targetWidth;
+            canvas.height = targetHeight;
+            ctx.drawImage(image, 0, 0, targetWidth, targetHeight);
+            resolve(canvas.toDataURL());
+        };
+        image.onerror = (error) => reject(error);
+        image.src = imagePath;
+    });
+}
+
 export function shuffleArray(array) {
     let currentIndex = array.length;
     while (currentIndex != 0) {

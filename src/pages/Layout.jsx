@@ -1,14 +1,14 @@
 import { Outlet } from "react-router-dom";
-import NavItem from "../components/NavItem";
+import Button from "../components/Button";
 
 export default function Layout() {
   return(
-    <div className="h-screen flex flex-col">
+    <div className="h-screen flex flex-col bg-gradient-to-br from-cyan-500 via-violet-600 to-blue-500">
       <nav className="block">
         <ul className="flex gap-6 justify-center">
-          <NavItem to="/">Home</NavItem>
-          <NavItem to="/settings">Settings</NavItem>
-          <NavItem to="/authors">Authors</NavItem>
+          <Button to="/">Home</Button>
+          <Button to="/levels">Levels</Button>
+          <Button to="/authors">Authors</Button>
         </ul>
       </nav>
       <Outlet />

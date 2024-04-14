@@ -1,7 +1,7 @@
 import { useReducer, useRef, useState } from "react";
 import Grid from "../components/Grid";
-import img from "../placeholder.jpg";
 import { formatTime } from "../scripts/gameLogic";
+import placeholder from "../data/imgs/placeholder.jpg";
 
 function movesReducer(state, action) {
   if(action === "increment"){
@@ -13,7 +13,7 @@ function movesReducer(state, action) {
   throw Error('Unknown action.');
 }
 
-export default function Game() {
+export default function Game({levelData={img:placeholder,x:3,y:3}, level}) {
   const timerRef = useRef(null);
   const [time,setTimer] = useState(0);
   const [moves,moveDispatcher] = useReducer(movesReducer,0);
@@ -37,15 +37,15 @@ export default function Game() {
         throw Error('Unknown action.');
     }
   }
-
   return(
     <div className="flex-1 flex justify-center items-center">
       <div className="flex justify-center flex-col">
-        <div className="flex justify-between my-6">
+        <div className="flex justify-between items-end mb-6">
           <h3 className="text-2xl font-bold">Time - {formatTime(time)}</h3>
+          <h2 className="text-3xl font-bold">Level {level}</h2>
           <h3 className="text-2xl font-bold">Moves - {moves}</h3>
         </div>
-        <Grid img={img} numCols={3} numRows={3} moves={moveDispatcher} timer={timerDispatcher}/>
+        <Grid level={level} img={levelData.img} numCols={levelData.cols} numRows={levelData.rows} moves={moveDispatcher} timer={timerDispatcher}/>
       </div>
     </div>
   )

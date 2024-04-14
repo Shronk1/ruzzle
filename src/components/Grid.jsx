@@ -1,11 +1,13 @@
 import { splitImageIntoTiles, shuffleArray, array1dTo2d, isFinnished, array2dTo1d } from "../scripts/gameLogic";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import Button from "./Button";
+import { LevelsContext } from "./App";
 
-export default function Grid({img, numCols, numRows, moves, timer}){
+export default function Grid({img, level, numCols, numRows, moves, timer}){
   const [gameStatus,setGameSatus] = useState("readyToStart");
   const [tiles,setTiles] = useState([]);
   const [selectedTile,setSelectedTile] = useState(false);
+  const levelsList = useContext(LevelsContext);
 
   useEffect(_=>{//pocięcie i pomieszanie obrazka
     async function cut(){
@@ -57,12 +59,21 @@ export default function Grid({img, numCols, numRows, moves, timer}){
     timer("start");
   }
 
+  function handleNext(){
+    timer("reset");
+    moves("reset");
+    const array = array2dTo1d(tiles);
+    shuffleArray(array);
+    setTiles(array1dTo2d(array,numCols));
+    setGameSatus("readyToStart");
+  }
+
   return(
     <div className="flex flex-col">
       {
         gameStatus === "readyToStart" ? 
         <div className="flex justify-center items-center">
-          <img draggable="false" src={img} className={"inline blur-sm select-none "} />
+          <img draggable="false" src={img} className={"inline blur-sm select-none shadow-2xl"} />
           <ul className="absolute">
             <Button Type="button" onClick={handleStart}>Start!</Button>
           </ul>
@@ -85,8 +96,14 @@ export default function Grid({img, numCols, numRows, moves, timer}){
       {
         gameStatus === "finished" ? 
         <div className="flex justify-center items-center">
-          <img draggable="false" src={img} className={"inline blur-sm select-none "} />
+          <img draggable="false" src={img} className={"inline blur-sm select-none shadow-2xl"} />
           <ul className="absolute">
+            {
+              levelsList.length === level ? 
+              <Button to={"/levels"}>Levels</Button>
+              :
+              <Button to={`/level/${level+1}`} onClick={handleReset}>Next Level</Button>
+            }
             <Button Type="button" onClick={handleReset}>Play again!</Button>
           </ul>
         </div>:undefined
