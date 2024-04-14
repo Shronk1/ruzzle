@@ -102,7 +102,7 @@ export default function Grid({img, level, numCols, numRows, moves, timer}){
               levelsList.length === level ? 
               <Button to={"/levels"}>Levels</Button>
               :
-              <Button to={`/level/${level+1}`} onClick={handleReset}>Next Level</Button>
+              <Button to={`/level/${level+1}`} onClick={handleNext}>Next Level</Button>
             }
             <Button Type="button" onClick={handleReset}>Play again!</Button>
           </ul>
