@@ -1,6 +1,13 @@
 import Button from "../components/Button"
+import { useEffect, useState } from "react";
+import { getLastLevel } from "../scripts/localstorage.js";
 
 export default function Home() {
+  const [lastLevelState, setLastLevelState] = useState(1);
+  useEffect(() => {
+    setLastLevelState(getLastLevel());
+  }, [])
+  
   return(
     <div className="flex flex-col justify-center items-center h-screen bg-gradient-to-br from-cyan-500 via-violet-600 to-blue-500">
       <div className="flex-1 flex justify-center items-center flex-col">
@@ -8,7 +15,7 @@ export default function Home() {
         <h2 className="text-center font-bold text-4xl">Puzzle in React</h2>
       </div>
       <ul className="flex-1">
-        <Button to="/level/1">Play</Button>
+        <Button to={`/level/${lastLevelState}`}>Play</Button>
         <Button to="/levels">Choose Level</Button>
         <Button to="/authors">Authors</Button>
       </ul>

@@ -2,38 +2,41 @@ import { splitImageIntoTiles, shuffleArray, array1dTo2d, isFinnished, array2dTo1
 import { useContext, useEffect, useState } from "react";
 import Button from "./Button";
 import { LevelsContext } from "./App";
+import { setLastLevel, setScore } from "../scripts/localstorage.js";
 
-export default function Grid({img, level, numCols, numRows, moves, timer}){
+export default function Grid({img, level, numCols, numRows, moves, moveDispatcher, timer}){
   const [gameStatus,setGameSatus] = useState("readyToStart");
   const [tiles,setTiles] = useState([]);
   const [selectedTile,setSelectedTile] = useState(false);
   const levelsList = useContext(LevelsContext);
 
-  useEffect(_=>{//pocięcie i pomieszanie obrazka
+  useEffect(_=>{
     async function cut(){
       const array = await splitImageIntoTiles(img, numCols, numRows);
       shuffleArray(array);
       setTiles(array1dTo2d(array,numCols));
     };
     cut();
-  },[numCols, numRows]);
+  },[numCols, numRows]);// numCols numRows are constant, but their are here to prevent warning
 
   function handleSelect(x,y) {
-    if(!selectedTile){//nic jeszcze nie jest zaznaczone, w JS {} jest truthy
+    if(!selectedTile){// select 1st piece; in JS {} is truthy
       setSelectedTile({x:x,y:y})
     }else{
-      if(selectedTile.x === x && selectedTile.y === y){ // odznaczenie puzzla
+      if(selectedTile.x === x && selectedTile.y === y){ // unselect
         setSelectedTile(false); 
-      }else{//zaznaczenie 2 puzzla
-        //TODO animacja
+      }else{// 2nd piece selected
+        //TODO animation
+        
+        // state update
         setTiles(state=>{
-          [state[y][x], state[selectedTile.y][selectedTile.x]] = [state[selectedTile.y][selectedTile.x], state[y][x]];//zamiana 2 puzzli
+          [state[y][x], state[selectedTile.y][selectedTile.x]] = [state[selectedTile.y][selectedTile.x], state[y][x]];// switch pieces
           if(isFinnished(state)){
             handleFinnish();
           };
           return state;
         })
-        moves("increment");
+        moveDispatcher("increment");
         setSelectedTile(false);
       }
     }
@@ -42,16 +45,19 @@ export default function Grid({img, level, numCols, numRows, moves, timer}){
   function handleStart(){
     setGameSatus("onGoing");
     timer("start");
+    setLastLevel(level);
   }
 
-  function handleFinnish(){
+  function handleFinnish(){// TODO new best
     setGameSatus("finished");
     timer("stop");
+    setScore(level, timer("get"), moves);
+    setLastLevel(levelsList.length===level? 1 : level+1);
   }
 
   function handleReset(){
     timer("reset");
-    moves("reset");
+    moveDispatcher("reset");
     const array = array2dTo1d(tiles);
     shuffleArray(array);
     setTiles(array1dTo2d(array,numCols));
@@ -61,7 +67,7 @@ export default function Grid({img, level, numCols, numRows, moves, timer}){
 
   function handleNext(){
     timer("reset");
-    moves("reset");
+    moveDispatcher("reset");
     const array = array2dTo1d(tiles);
     shuffleArray(array);
     setTiles(array1dTo2d(array,numCols));

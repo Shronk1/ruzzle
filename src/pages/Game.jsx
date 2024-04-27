@@ -33,6 +33,8 @@ export default function Game({levelData={img:placeholder,x:3,y:3}, level}) {
         if (timerRef.current) clearInterval(timerRef.current);
         setTimer(0);
         return;
+      case "get":
+        return time;
       default:
         throw Error('Unknown action.');
     }
@@ -45,7 +47,7 @@ export default function Game({levelData={img:placeholder,x:3,y:3}, level}) {
           <h2 className="text-3xl font-bold">Level {level}</h2>
           <h3 className="text-2xl font-bold">Moves - {moves}</h3>
         </div>
-        <Grid level={level} img={levelData.img} numCols={levelData.cols} numRows={levelData.rows} moves={moveDispatcher} timer={timerDispatcher}/>
+        <Grid level={level} img={levelData.img} numCols={levelData.cols} numRows={levelData.rows} moves={moves} moveDispatcher={moveDispatcher} timer={timerDispatcher}/>
       </div>
     </div>
   )
